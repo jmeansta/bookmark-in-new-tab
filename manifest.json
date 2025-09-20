@@ -1,0 +1,25 @@
+{
+
+  "manifest_version": 2,
+  "name": "Bookmarks in New Tab",
+  "version": "1.0",
+
+  "description": "Shows the bookmark menu in new tabs",
+
+  "icons": {
+    "48": "icons/bookmark-48.png"
+  },
+
+  // "content_scripts": [
+  //   {
+  //     "matches": ["*://*.mozilla.org/*"],
+  //     "js": ["borderify.js"]
+  //   }
+  // ],
+
+  "applications": {
+    "gecko": {
+      "id": "themeanstoachieve@gmail.com"
+    }
+  }
+}
