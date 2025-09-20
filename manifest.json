@@ -21,5 +21,25 @@
     "gecko": {
       "id": "themeanstoachieve@gmail.com"
     }
+  },
+  "options_ui": {
+    "page": "options.html",
+    "browser_style": true
+  },
+  "permissions": [
+    "storage","bookmarks"
+  ],
+  "optional_permissions": [
+    "<all_urls>",
+    "webRequest",
+    "webRequestBlocking"
+  ],
+  "chrome_url_overrides" : {
+    "newtab": "app.html"
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
   }
 }
