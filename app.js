@@ -22,16 +22,20 @@ function newElement(bookmarkItem,indent) {
   $("bookmarkBar").appendChild(elm)
 }
 
+function displaySubnodes(bookmarkItem) {
+  console.log(bookmarkItem.title)
+}
+
 function onRejected(error) {
   var elm = document.createElement("p");
   elm.innerHTML = `An error occured: ${error}`
   $("bmDiv").appendChild(elm)
 }
 
-function newFolder(id) {
+function newFolder(bookmarkItem) {
   var folder = document.createElement("p")
-  folder.innerHTML = id;
-  // folder.onclick = displaySubnodes(id)
+  folder.innerHTML = bookmarkItem.title;
+  folder.addEventListener('click', function(){displaySubnodes(bookmarkItem)})
   $("bookmarkFolders").appendChild(folder)
 }
 
@@ -42,7 +46,7 @@ async function startTraversalToRestoreFolders(bookmarkItems) {
 async function traverseTreeToRestoreFolders(bookmarkItem) {
   const options = await browser.storage.local.get(["selectedFolders"]);
 
-  options.selectedFolders.forEach(function(id) {if (bookmarkItem.id == id) {newFolder(bookmarkItem.title)}});
+  options.selectedFolders.forEach(function(id) {if (bookmarkItem.id == id) {newFolder(bookmarkItem)}});
   
   if (bookmarkItem.children) {
     for (const child of bookmarkItem.children) {
