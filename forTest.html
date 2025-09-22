@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>options.html</title>
+</head>
+<body class="is-loading">
+	<p>options.html</p>
+	<form id="bmForm">
+		<div style="margin-left: 0px;">
+			<input type="checkbox" name="bookmarkItem.id" id="bookmarkItem.id">
+			<label for="bookmarkItem.id">bookmarkItem.title</label>
+		</div>
+	</form>
+</body>
+</html>
+<script>
+	function $(id) {return document.getElementById(id)}
+
+	var elm = document.createElement("div");
+	var input = document.createElement("input");
+	var label = document.createElement("label"); // folders
+
+	input.type = "checkbox";
+	input.name = "bookmarkItem.id2";
+	input.id = "bookmarkItem.id2";
+	elm.appendChild(input)
+
+	label.innerHTML = "bookmarkItem.title";
+	label.htmlFor = "bookmarkItem.id2";
+	// label.title = indent.toString()+" - "+bookmarkItem.id;
+	// label.title = label.for.toString()
+	// label.onclick = function() {alert(this)}
+	elm.appendChild(label)
+
+	elm.style = "margin-left: 40px;"
+
+	// if (bookmarkItem.url == "data:") {
+	//   // horizontal rules turn into boxes when they have innerHTML
+	//   // I elected to just overwrite the "elm" variable in this case
+	//   var elm = document.createElement("hr"); // separators
+	//   elm.align = "right";
+	//   elm.width = $("bmForm").clientWidth-indent*40 + "px";
+	// }
+	$("bmForm").appendChild(elm)
+</script>
