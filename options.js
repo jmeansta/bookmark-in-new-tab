@@ -1,34 +1,23 @@
 function $(id) {return document.getElementById(id)}
 
-function collectSelectedFolders() {
-  var checkedFolders = [];
+const saveOptions = async e => {
+  var options = {};
+  var selectedFolders = [];
 
   var collection = document.getElementsByClassName("folderCheckbox")
   for (var c in collection) {
     if (collection[c].checked) {
-      checkedFolders.push(collection[c].id)
+      selectedFolders.push(collection[c].id)
     }
   }
 
-  return checkedFolders;
-}
-
-const saveOptions = async e => {
-
-  const options = {
-    selectedFolders: ["W9XV-ZW9BFS1","9r7kOPEmp75W"]
-    // selectedFolders: collectSelectedFolders();
-  }
-
+  options.selectedFolders = selectedFolders;
   await browser.storage.local.set( options );
 };
 
 
 const restoreOptions = async _ => {
-  // alert("restoreOptions")
   const options = await browser.storage.local.get(["selectedFolders"]);
-  // alert(options.selectedFolders.forEach)
-  // options.selectedFolders.forEach((id) => alert($(id)));
   options.selectedFolders.forEach((id) => $(id).checked = true);
 };
 
