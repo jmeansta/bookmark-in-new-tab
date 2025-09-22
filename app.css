@@ -1,7 +1,7 @@
 body {
 	display: grid;
 	grid-template-columns: 10% auto 10%;
-	grid-template-rows: 10% 50% auto 10%;
+	grid-template-rows: 10% 40% 20% auto 10%;
 	height: 100vh;
 }
 #searchBar {
@@ -9,8 +9,18 @@ body {
 	grid-column: 2 / 3;
 	grid-row: 2 / 3;
 }
-#bookmarkBar {
+#bookmarkFolders {
 	border: 1px solid blue;
 	grid-column: 2 / 3;
 	grid-row: 3 / 4;
+	overflow: scroll;
+}
+#bookmarkBar {
+	border: 1px solid green;
+	grid-column: 2 / 3;
+	grid-row: 4 / 5;
+	overflow: scroll;
+}
+a {
+	display: block;
 }
