@@ -41,10 +41,6 @@ function traverseTree(bookmarkItem, indent, printingChildren) {
   }
 }
 
-function findInTree(id) {
-  // body...
-}
-
 function startTraversal(bookmarkItems) {
   traverseTree(bookmarkItems[0], 0, false);
 }
@@ -65,12 +61,41 @@ function newFolder(id) {
 async function restoreOptions() {
   const options = await browser.storage.local.get(["selectedFolders"]);
   // console.log(options)
-  options.selectedFolders.forEach((id) => newFolder(id));
-  // pass the ids of the folders to load to a tree traversal function
+  // options.selectedFolders.forEach((id) => newFolder(id));
+  // let treePromise = browser.bookmarks.getTree();
+  // treePromise.then(startTraversal, onRejected);
+  // have the tree traversal function get the ids of the folders to load
   // that function should traverse the tree, looking for folders with those ids
   // and then make folders in the folder div with those names
 };
 
-window.addEventListener( 'load', restoreOptions );
+async function startTraversalToRestoreFolders(bookmarkItems) {
+  traverseTreeToRestoreFolders(bookmarkItems[0]);
+}
+
+function checkAndAddFolder(id,bookmarkItem) {
+  if (bookmarkItem.id == id) {
+    newFolder(bookmarkItem.title)
+  }
+}
+
+async function traverseTreeToRestoreFolders(bookmarkItem) {
+  const options = await browser.storage.local.get(["selectedFolders"]);
+
+  options.selectedFolders.forEach((id) => checkAndAddFolder(id,bookmarkItem));
+  // if (bookmarkItem.id == id) {newFolder(bookmarkItem)}
+
+  // options.selectedFolders.forEach((id) => function () {if (bookmarkItem.id == id) {alert(bookmarkItem.title)}});
+  // if (printingChildren) {
+  //   newElement(bookmarkItem,indent)
+  // }
+  if (bookmarkItem.children) {
+    for (const child of bookmarkItem.children) {
+      traverseTreeToRestoreFolders(child);
+    }
+  }
+}
+
+// window.addEventListener( 'load', startTraversalToRestoreFolders );
 let treePromise = browser.bookmarks.getTree();
-treePromise.then(startTraversal, onRejected);
+treePromise.then(startTraversalToRestoreFolders, onRejected);
