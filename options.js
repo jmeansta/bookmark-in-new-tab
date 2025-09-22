@@ -1,10 +1,36 @@
 function $(id) {return document.getElementById(id)}
 
-function idAndIndent(n,bookmarkItem,indent) {
-  if (bookmarkItem.id=="root________" || bookmarkItem.id=="menu________") {
-    console.log(n.toString()+bookmarkItem.id+indent.toString())
+function collectSelectedFolders() {
+  var checkedFolders = [];
+
+  var collection = document.getElementsByClassName("folderCheckbox")
+  for (var c in collection) {
+    if (collection[c].checked) {
+      checkedFolders.push(collection[c].id)
+    }
   }
+
+  return checkedFolders;
 }
+
+const saveOptions = async e => {
+
+  const options = {
+    selectedFolders: ["W9XV-ZW9BFS1","9r7kOPEmp75W"]
+    // selectedFolders: collectSelectedFolders();
+  }
+
+  await browser.storage.local.set( options );
+};
+
+
+const restoreOptions = async _ => {
+  // alert("restoreOptions")
+  const options = await browser.storage.local.get(["selectedFolders"]);
+  // alert(options.selectedFolders.forEach)
+  // options.selectedFolders.forEach((id) => alert($(id)));
+  options.selectedFolders.forEach((id) => $(id).checked = true);
+};
 
 function newElement(bookmarkItem,indent) {
   if (bookmarkItem.url) {
@@ -16,6 +42,7 @@ function newElement(bookmarkItem,indent) {
 
   input.type = "checkbox";
   input.id = bookmarkItem.id;
+  input.classList.add("folderCheckbox");
   rowItem.appendChild(input)
 
   label.innerHTML = bookmarkItem.title;
@@ -59,6 +86,7 @@ function traverseTree(bookmarkItem, indent, printingChildren) {
 
 function startTraversal(bookmarkItems) {
   traverseTree(bookmarkItems[0], 0, false);
+  restoreOptions()
 }
 
 function onRejected(error) {
@@ -68,8 +96,7 @@ function onRejected(error) {
 }
 
 let treePromise = browser.bookmarks.getTree();
-try {
-  treePromise.then(startTraversal, onRejected);
-} catch(e) {
-  alert(e)
-}
+treePromise.then(startTraversal, onRejected);
+
+// document.addEventListener( 'DOMContentLoaded', restoreOptions );
+$("bmForm").addEventListener( 'submit', saveOptions );

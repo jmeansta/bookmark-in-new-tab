@@ -10,7 +10,7 @@
 	<p>options.html</p>
 	<form id="bmForm">
 		<div style="margin-left: 0px;">
-			<input type="checkbox" name="bookmarkItem.id" id="bookmarkItem.id">
+			<input type="checkbox" name="bookmarkItem.id" id="bookmarkItem.id" class="folderCheckbox">
 			<label for="bookmarkItem.id">bookmarkItem.title</label>
 		</div>
 	</form>
@@ -26,6 +26,7 @@
 	input.type = "checkbox";
 	input.name = "bookmarkItem.id2";
 	input.id = "bookmarkItem.id2";
+	input.classList.add("folderCheckbox");
 	elm.appendChild(input)
 
 	label.innerHTML = "bookmarkItem.title";
