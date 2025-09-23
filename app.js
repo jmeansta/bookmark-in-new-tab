@@ -1,6 +1,6 @@
 function $(id) {return document.getElementById(id)}
 
-function newElement(bookmarkItem,indent) {
+function newElement(bookmarkItem,indent=0) {
   if (bookmarkItem.url) {
     var elm = document.createElement("a"); // bookmarks
     elm.href = bookmarkItem.url;
@@ -22,9 +22,7 @@ function newElement(bookmarkItem,indent) {
   $("bookmarkBar").appendChild(elm)
 }
 
-function displaySubnodes(bookmarkItem) {
-  console.log(bookmarkItem.title)
-}
+
 
 function onRejected(error) {
   var elm = document.createElement("p");
@@ -35,25 +33,64 @@ function onRejected(error) {
 function newFolder(bookmarkItem) {
   var folder = document.createElement("p")
   folder.innerHTML = bookmarkItem.title;
-  folder.addEventListener('click', function(){displaySubnodes(bookmarkItem)})
+  folder.dataset.bookmarkItem = bookmarkItem.id
+  folder.addEventListener('click', function(){displaySubnodes(this.dataset.bookmarkItem)})
   $("bookmarkFolders").appendChild(folder)
 }
 
-async function startTraversalToRestoreFolders(bookmarkItems) {
-  traverseTreeToRestoreFolders(bookmarkItems[0]);
-}
-
-async function traverseTreeToRestoreFolders(bookmarkItem) {
+async function traverseTree_savedFolders(bookmarkItem) {
   const options = await browser.storage.local.get(["selectedFolders"]);
 
   options.selectedFolders.forEach(function(id) {if (bookmarkItem.id == id) {newFolder(bookmarkItem)}});
   
   if (bookmarkItem.children) {
     for (const child of bookmarkItem.children) {
-      traverseTreeToRestoreFolders(child);
+      traverseTree_savedFolders(child);
     }
   }
 }
 
+async function traverseTree_folderContents(bookmarkItem,bmid,isChild) {
+  if (isChild) {
+    newElement(bookmarkItem)
+  }
+
+  if (bookmarkItem.children) {
+    for (const child of bookmarkItem.children) {
+      if (isChild || bookmarkItem.id == bmid) {
+        traverseTree_folderContents(child, bmid, true);
+      } else {
+        traverseTree_folderContents(child, bmid, false);
+      }
+    }
+  }
+  // console.log(`id: ${bookmarkItem.id}`)
+  // console.log(`bmid: ${bmid}`)
+  // return
+
+  // if (bookmarkItem.children) {
+  //   for (const child of bookmarkItem.children) {
+  //     traverseTree_folderContents(child);
+  //   }
+  // }
+
+  // if (bookmarkItem.id == bmid) {
+
+  // }
+}
+
+async function startTraversal_savedFolders(bookmarkItems) {
+  traverseTree_savedFolders(bookmarkItems[0]);
+}
+
+function startTraversal_folderContents(bookmarkItems,bmid) {
+  traverseTree_folderContents(bookmarkItems[0],bmid)
+}
+
+function displaySubnodes(bmid) {
+  console.log(bmid)
+  treePromise.then((tree) => startTraversal_folderContents (tree,bmid), onRejected)
+}
+
 let treePromise = browser.bookmarks.getTree();
-treePromise.then(startTraversalToRestoreFolders, onRejected);
+treePromise.then(startTraversal_savedFolders, onRejected);

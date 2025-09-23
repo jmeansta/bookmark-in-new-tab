@@ -54,7 +54,6 @@ function traverseTree(bookmarkItem, indent, printingChildren) {
     }
     indent--;
   }
-  
 }
 
 function startTraversal(bookmarkItems) {
