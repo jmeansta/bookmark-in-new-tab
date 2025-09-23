@@ -1,39 +1,45 @@
 function $(id) {return document.getElementById(id)}
 
-function newElement(bookmarkItem,indent=0) {
-  if (bookmarkItem.url) {
-    var elm = document.createElement("a"); // bookmarks
-    elm.href = bookmarkItem.url;
-  } else {
-    var elm = document.createElement("p"); // folders
-  }
-  elm.innerHTML = bookmarkItem.title;
-  // elm.innerHTML = indent.toString()+" - "+bookmarkItem.title+" ("+bookmarkItem.id+")";
-  elm.title = indent.toString()+" - "+bookmarkItem.id;
-  elm.style = "margin: 0px; margin-left: " + indent*40 + "px;"
-
+function newBookmark(bookmarkItem,indent=0) {
+  var elm = document.createElement("p");
+  elm.innerHTML = "bookmarkItem with no URL passed to newBookmark"
   if (bookmarkItem.url == "data:") {
-    // horizontal rules turn into boxes when they have innerHTML
-    // I elected to just overwrite the "elm" variable in this case
-    var elm = document.createElement("hr"); // separators
+    elm = document.createElement("hr"); // separators
     elm.align = "right";
     elm.width = $("bookmarkBar").clientWidth-indent*40 + "px";
+  } else if (bookmarkItem.url) {
+    elm = document.createElement("a"); // bookmarks
+    elm.href = bookmarkItem.url;
+    elm.innerHTML = bookmarkItem.title;
+    // elm.innerHTML = indent.toString()+" - "+bookmarkItem.title+" ("+bookmarkItem.id+")";
+    elm.title = indent.toString()+" - "+bookmarkItem.id;
+    elm.style = "margin: 0px; margin-left: " + indent*40 + "px;"
   }
   $("bookmarkBar").appendChild(elm)
+  
 }
 
-function onRejected(error) {
-  var elm = document.createElement("p");
-  elm.innerHTML = `An error occured: ${error}`
-  $("bmDiv").appendChild(elm)
+function displayFolderBookmarks(bmFolderElm) {
+  var bmid = bmFolderElm.dataset.bookmarkItem
+  while ($("bookmarkBar").firstChild) {
+      $("bookmarkBar").removeChild($("bookmarkBar").firstChild);
+  }
+  treePromise.then((tree) => startTraversal_folderContents (tree,bmid), onRejected)
 }
 
 function newFolder(bookmarkItem) {
   var folder = document.createElement("p")
   folder.innerHTML = bookmarkItem.title;
   folder.dataset.bookmarkItem = bookmarkItem.id
-  folder.addEventListener('click', function(){displaySubnodes(this.dataset.bookmarkItem)})
+  // folder.id = `bmid${bookmarkItem.id}`
+  folder.addEventListener('click', function(){displayFolderBookmarks(this)})
   $("bookmarkFolders").appendChild(folder)
+}
+
+function onRejected(error) {
+  var elm = document.createElement("p");
+  elm.innerHTML = `An error occured: ${error}`
+  $("bmDiv").appendChild(elm)
 }
 
 async function traverseTree_savedFolders(bookmarkItem) {
@@ -46,11 +52,12 @@ async function traverseTree_savedFolders(bookmarkItem) {
       traverseTree_savedFolders(child);
     }
   }
+  
 }
 
 async function traverseTree_folderContents(bookmarkItem,bmid,isChild) {
   if (isChild && bookmarkItem.url) {
-    newElement(bookmarkItem)
+    newBookmark(bookmarkItem)
   }
 
   if (bookmarkItem.children) {
@@ -73,12 +80,8 @@ function startTraversal_folderContents(bookmarkItems,bmid) {
   traverseTree_folderContents(bookmarkItems[0],bmid)
 }
 
-function displaySubnodes(bmid) {
-  while ($("bookmarkBar").firstChild) {
-      $("bookmarkBar").removeChild($("bookmarkBar").firstChild);
-  }
-  treePromise.then((tree) => startTraversal_folderContents (tree,bmid), onRejected)
-}
-
 let treePromise = browser.bookmarks.getTree();
 treePromise.then(startTraversal_savedFolders, onRejected);
+
+// displayFolderBookmarks($("bookmarkFolders").firstChild.dataset.bookmarkItem)
+
