@@ -5,6 +5,34 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>options.html</title>
+	<style>
+		#wrapper {
+			border-radius: 20px;
+			padding: 20px;
+			border: 1px solid green;
+			overflow: hidden;
+		}
+		#carosel {
+			border-radius: 20px;
+			padding: 20px;
+			height: 90px;
+			border: 1px solid red;
+			display: flex;
+			flex-direction: row;
+			column-gap: 2%;
+			overflow: scroll;
+			justify-content: center;
+			div {
+				/*flex-basis: 70px;*/
+				aspect-ratio: 1 / 1;
+				border: 1px solid black;
+				flex: 0 0 70px
+			}
+		}
+		.is-overflowing {
+			justify-content: start !important;
+		}
+	</style>
 </head>
 <body class="is-loading">
 	<p>options.html</p>
@@ -14,9 +42,33 @@
 			<label for="bookmarkItem.id">bookmarkItem.title</label>
 		</div>
 	</form>
+	<!-- <div id="wrapper"> -->
+		<div id="carosel" class="watch-overflow">
+			<div>1</div>
+			<div>2</div>
+			<div>3</div>
+			<div>4</div>
+			<div>5</div>
+			<div>6</div>
+		</div>
+	<!-- </div> -->
 </body>
 </html>
 <script>
+
+	function watchOverflow(el) {
+		function update() {
+	    	const overflowing = el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight;
+			el.classList.toggle("is-overflowing", overflowing);
+		}
+		update();
+		const resizeObserver = new ResizeObserver(update);
+		resizeObserver.observe(el);
+	}
+	document.querySelectorAll(".watch-overflow").forEach(watchOverflow);
+
+	////////////////////////////
+
 	function $(id) {return document.getElementById(id)}
 
 	var elm = document.createElement("div");

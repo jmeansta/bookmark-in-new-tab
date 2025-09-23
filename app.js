@@ -22,8 +22,6 @@ function newElement(bookmarkItem,indent=0) {
   $("bookmarkBar").appendChild(elm)
 }
 
-
-
 function onRejected(error) {
   var elm = document.createElement("p");
   elm.innerHTML = `An error occured: ${error}`
@@ -51,32 +49,20 @@ async function traverseTree_savedFolders(bookmarkItem) {
 }
 
 async function traverseTree_folderContents(bookmarkItem,bmid,isChild) {
-  if (isChild) {
+  if (isChild && bookmarkItem.url) {
     newElement(bookmarkItem)
   }
 
   if (bookmarkItem.children) {
     for (const child of bookmarkItem.children) {
-      if (isChild || bookmarkItem.id == bmid) {
+      // if (isChild || bookmarkItem.id == bmid) {
+      if (bookmarkItem.id == bmid) {
         traverseTree_folderContents(child, bmid, true);
       } else {
         traverseTree_folderContents(child, bmid, false);
       }
     }
   }
-  // console.log(`id: ${bookmarkItem.id}`)
-  // console.log(`bmid: ${bmid}`)
-  // return
-
-  // if (bookmarkItem.children) {
-  //   for (const child of bookmarkItem.children) {
-  //     traverseTree_folderContents(child);
-  //   }
-  // }
-
-  // if (bookmarkItem.id == bmid) {
-
-  // }
 }
 
 async function startTraversal_savedFolders(bookmarkItems) {
@@ -88,7 +74,9 @@ function startTraversal_folderContents(bookmarkItems,bmid) {
 }
 
 function displaySubnodes(bmid) {
-  console.log(bmid)
+  while ($("bookmarkBar").firstChild) {
+      $("bookmarkBar").removeChild($("bookmarkBar").firstChild);
+  }
   treePromise.then((tree) => startTraversal_folderContents (tree,bmid), onRejected)
 }
 
