@@ -3,6 +3,7 @@ function $(id) {return document.getElementById(id)}
 const saveOptions = async e => {
   var options = {};
   var selectedFolders = [];
+  var selectedBookmarks = [];
 
   var collection = document.getElementsByClassName("folderCheckbox")
   for (var c in collection) {
@@ -10,36 +11,55 @@ const saveOptions = async e => {
       selectedFolders.push(collection[c].id)
     }
   }
+  var collection = document.getElementsByClassName("bookmarkCheckbox")
+  for (var c in collection) {
+    if (collection[c].checked) {
+      selectedBookmarks.push(collection[c].id)
+    }
+  }
+  // I'm duplicating this logic because app.js can't
+  // differentiate between bookmarks and folders until
+  // it's several nested functions deep, and I don't
+  // want to rewrite it
 
   options.selectedFolders = selectedFolders;
+  options.selectedBookmarks = selectedBookmarks
   await browser.storage.local.set( options );
 };
 
 
 const restoreOptions = async _ => {
-  const options = await browser.storage.local.get(["selectedFolders"]);
+  const options = await browser.storage.local.get();
   options.selectedFolders.forEach((id) => $(id).checked = true);
+  options.selectedBookmarks.forEach((id) => $(id).checked = true);
 };
 
 function newElement(bookmarkItem,indent) {
-  if (bookmarkItem.url) {
-    return // removes individual bookmarks and smart options like "Most Visited"
-  }
+  
   var rowItem = document.createElement("div");
   var input = document.createElement("input");
   var label = document.createElement("label");
 
   input.type = "checkbox";
   input.id = bookmarkItem.id;
-  input.classList.add("folderCheckbox");
   rowItem.appendChild(input)
 
   label.innerHTML = bookmarkItem.title;
   label.htmlFor = bookmarkItem.id;
   rowItem.appendChild(label)
 
-  rowItem.title = indent.toString()+" - "+bookmarkItem.id;
+  // rowItem.title = indent.toString()+" - "+bookmarkItem.id;
   rowItem.style = "margin: 0px; margin-left: " + indent*40 + "px;"
+  rowItem.classList.add("treeItem")
+  if (bookmarkItem.url) {
+    input.classList.add("bookmarkCheckbox");
+    rowItem.classList.add("bookmark")
+    rowItem.title = bookmarkItem.url;
+  } else {
+    input.classList.add("folderCheckbox");
+    rowItem.classList.add("folder")
+  }
+  // rowItem.title = rowItem.classList
 
   if (bookmarkItem.url == "data:") {
     // horizontal rules turn into boxes when they have innerHTML

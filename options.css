@@ -1,3 +1,14 @@
 /*div {
 	border: 1px solid red;
 }*/
+.treeItem {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.bookmark {
+	font-style: italic;
+}
+.folder {
+	font-weight: bold;
+}

@@ -121,6 +121,7 @@ function startTraversal_folderContents(bookmarkItems,bmid) {
 
 let treePromise = browser.bookmarks.getTree();
 treePromise.then(startTraversal_savedFolders, onRejected);
+
 document.querySelectorAll(".dividerBox").forEach(watchOverflow);
 
 
