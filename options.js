@@ -48,6 +48,7 @@ function newElement(bookmarkItem,indent) {
   label.htmlFor = bookmarkItem.id;
   rowItem.appendChild(label)
 
+  input.classList.add("folderCheckbox");
   // rowItem.title = indent.toString()+" - "+bookmarkItem.id;
   rowItem.style = "margin: 0px; margin-left: " + indent*40 + "px;"
   rowItem.classList.add("treeItem")
@@ -56,7 +57,7 @@ function newElement(bookmarkItem,indent) {
     rowItem.classList.add("bookmark")
     rowItem.title = bookmarkItem.url;
   } else {
-    input.classList.add("folderCheckbox");
+    // input.classList.add("folderCheckbox");
     rowItem.classList.add("folder")
   }
   // rowItem.title = rowItem.classList

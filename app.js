@@ -26,12 +26,30 @@ function displayFolderBookmarks(bmFolderElm) {
   while ($("nestedBookmarks").firstChild) {
       $("nestedBookmarks").removeChild($("nestedBookmarks").firstChild);
   }
-  treePromise.then((tree) => startTraversal_folderContents (tree,bmid), onRejected)
+  treePromise.then((tree) => startTraversal_nestedBookmarks (tree,bmid), onRejected)
 }
 
-function newBookmark(bookmarkItem,indent=0) {
+function newBookmark(bookmarkItem) {
+  var div = document.createElement("div")
+  var label = document.createElement("p")
+  var img = document.createElement("img")
+
+  img.src = "icons/star.svg"
+  img.classList.add("iconNeedsScaling")
+  div.appendChild(img)
+
+  label.innerHTML = bookmarkItem.title;
+  div.appendChild(label)
+
+  div.dataset.bookmarkItem = bookmarkItem.id
+  // folder.id = `bmid${bookmarkItem.id}`
+  div.addEventListener('click', function(){displayFolderBookmarks(this)})
+  $("savedBookmarks").appendChild(div)
+}
+
+function newNestedBookmark(bookmarkItem,indent=0) {
   var elm = document.createElement("p");
-  elm.innerHTML = "bookmarkItem with no URL passed to newBookmark"
+  elm.innerHTML = "bookmarkItem with no URL passed to newNestedBookmark"
   if (bookmarkItem.url == "data:") {
     elm = document.createElement("hr"); // separators
     elm.align = "right";
@@ -53,7 +71,7 @@ function newFolder(bookmarkItem) {
   var img = document.createElement("img")
 
   img.src = "icons/folder.svg"
-  img.classList.add("folderIcon")
+  img.classList.add("iconNeedsScaling")
   folder.appendChild(img)
 
   label.innerHTML = bookmarkItem.title;
@@ -72,16 +90,17 @@ function onRejected(error) {
 }
 
 function traverseTree_savedFolders(bookmarkItem,selectedFolders,isRoot) {
-  selectedFolders.forEach(function(id) {if (bookmarkItem.id == id) {newFolder(bookmarkItem)}});
-  
   if (bookmarkItem.children) {
+    selectedFolders.forEach(function(id) {if (bookmarkItem.id == id) {newFolder(bookmarkItem)}});
     for (const child of bookmarkItem.children) {
       traverseTree_savedFolders(child,selectedFolders,false);
     }
+  } else {
+    selectedFolders.forEach(function(id) {if (bookmarkItem.id == id) {newBookmark(bookmarkItem)}});
   }
   if (isRoot) {
     // run when recursion has finished
-    var collection = document.getElementsByClassName("folderIcon");
+    var collection = document.getElementsByClassName("iconNeedsScaling");
     for (var k = 0; k < collection.length; k++) {
       var imageHeight = 0
       imageHeight += collection[k].parentElement.clientHeight;
@@ -95,7 +114,7 @@ function traverseTree_savedFolders(bookmarkItem,selectedFolders,isRoot) {
 
 function traverseTree_folderContents(bookmarkItem,bmid,isChild) {
   if (isChild && bookmarkItem.url) {
-    newBookmark(bookmarkItem)
+    newNestedBookmark(bookmarkItem)
   }
 
   if (bookmarkItem.children) {
@@ -115,7 +134,7 @@ async function startTraversal_savedFolders(bookmarkItems) {
   traverseTree_savedFolders(bookmarkItems[0],options.selectedFolders,true);
 }
 
-function startTraversal_folderContents(bookmarkItems,bmid) {
+function startTraversal_nestedBookmarks(bookmarkItems,bmid) {
   traverseTree_folderContents(bookmarkItems[0],bmid,false)
 }
 
