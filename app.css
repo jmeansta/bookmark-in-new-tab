@@ -51,18 +51,15 @@ body {
 		aspect-ratio: 1 / 1;
 		align-content: center;
 		border-radius: inherit;
-		background-color: #bbb;
-		color: #666;
 		img {
 			display: block;
 			margin: auto;
-			filter: invert(0.5);
 		}
 		p {
 			margin: 0;
 			overflow: hidden;
-		  white-space: nowrap;
-		  text-overflow: ellipsis;
+			white-space: nowrap;
+			text-overflow: ellipsis;
 		}
 	}
 }

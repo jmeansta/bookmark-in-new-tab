@@ -41,9 +41,10 @@ function newBookmark(bookmarkItem) {
   label.innerHTML = bookmarkItem.title;
   div.appendChild(label)
 
-  div.dataset.bookmarkItem = bookmarkItem.id
+  // div.dataset.bookmarkItem = bookmarkItem.id
+  div.dataset.linkTo = bookmarkItem.url
   // folder.id = `bmid${bookmarkItem.id}`
-  div.addEventListener('click', function(){displayFolderBookmarks(this)})
+  div.addEventListener('click', function(){window.open(this.dataset.linkTo,"_self")})
   $("savedBookmarks").appendChild(div)
 }
 
