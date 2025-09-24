@@ -23,8 +23,8 @@ function displayFolderBookmarks(bmFolderElm) {
   }
 
   var bmid = bmFolderElm.dataset.bookmarkItem
-  while ($("bookmarkBar").firstChild) {
-      $("bookmarkBar").removeChild($("bookmarkBar").firstChild);
+  while ($("nestedBookmarks").firstChild) {
+      $("nestedBookmarks").removeChild($("nestedBookmarks").firstChild);
   }
   treePromise.then((tree) => startTraversal_folderContents (tree,bmid), onRejected)
 }
@@ -35,7 +35,7 @@ function newBookmark(bookmarkItem,indent=0) {
   if (bookmarkItem.url == "data:") {
     elm = document.createElement("hr"); // separators
     elm.align = "right";
-    elm.width = $("bookmarkBar").clientWidth-indent*40 + "px";
+    elm.width = $("nestedBookmarks").clientWidth-indent*40 + "px";
   } else if (bookmarkItem.url) {
     elm = document.createElement("a"); // bookmarks
     elm.href = bookmarkItem.url;
@@ -44,7 +44,7 @@ function newBookmark(bookmarkItem,indent=0) {
     elm.title = indent.toString()+" - "+bookmarkItem.id;
     elm.style = "margin: 0px; margin-left: " + indent*40 + "px;"
   }
-  $("bookmarkBar").appendChild(elm)
+  $("nestedBookmarks").appendChild(elm)
 }
 
 function newFolder(bookmarkItem) {
@@ -62,7 +62,7 @@ function newFolder(bookmarkItem) {
   folder.dataset.bookmarkItem = bookmarkItem.id
   // folder.id = `bmid${bookmarkItem.id}`
   folder.addEventListener('click', function(){displayFolderBookmarks(this)})
-  $("bookmarkFolders").appendChild(folder)
+  $("savedFolders").appendChild(folder)
 }
 
 function onRejected(error) {
@@ -89,7 +89,7 @@ function traverseTree_savedFolders(bookmarkItem,selectedFolders,isRoot) {
       imageHeight -= 2*Number.parseFloat(window.getComputedStyle(collection[k].parentNode, null).getPropertyValue('padding'));
       collection[k].height = imageHeight;
     }
-    displayFolderBookmarks($("bookmarkFolders").firstChild)
+    displayFolderBookmarks($("savedFolders").firstChild)
   }
 }
 
