@@ -11,16 +11,6 @@ const saveOptions = async e => {
       selectedFolders.push(collection[c].id)
     }
   }
-  var collection = document.getElementsByClassName("bookmarkCheckbox")
-  for (var c in collection) {
-    if (collection[c].checked) {
-      selectedBookmarks.push(collection[c].id)
-    }
-  }
-  // I'm duplicating this logic because app.js can't
-  // differentiate between bookmarks and folders until
-  // it's several nested functions deep, and I don't
-  // want to rewrite it
 
   options.selectedFolders = selectedFolders;
   options.selectedBookmarks = selectedBookmarks
@@ -31,7 +21,6 @@ const saveOptions = async e => {
 const restoreOptions = async _ => {
   const options = await browser.storage.local.get();
   options.selectedFolders.forEach((id) => $(id).checked = true);
-  options.selectedBookmarks.forEach((id) => $(id).checked = true);
 };
 
 function newElement(bookmarkItem,indent) {
