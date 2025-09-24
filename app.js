@@ -15,6 +15,13 @@ function watchOverflow(el) {
 }
 
 function displayFolderBookmarks(bmFolderElm) {
+  if ($("selectedFolder")==null) {
+    bmFolderElm.id = "selectedFolder"
+  } else {
+    $("selectedFolder").removeAttribute("id");
+    bmFolderElm.id = "selectedFolder"
+  }
+
   var bmid = bmFolderElm.dataset.bookmarkItem
   while ($("bookmarkBar").firstChild) {
       $("bookmarkBar").removeChild($("bookmarkBar").firstChild);
@@ -42,7 +49,16 @@ function newBookmark(bookmarkItem,indent=0) {
 
 function newFolder(bookmarkItem) {
   var folder = document.createElement("div")
-  folder.innerHTML = bookmarkItem.title;
+  var label = document.createElement("p")
+  var img = document.createElement("img")
+
+  img.src = "icons/folder.svg"
+  img.classList.add("folderIcon")
+  folder.appendChild(img)
+
+  label.innerHTML = bookmarkItem.title;
+  folder.appendChild(label)
+
   folder.dataset.bookmarkItem = bookmarkItem.id
   // folder.id = `bmid${bookmarkItem.id}`
   folder.addEventListener('click', function(){displayFolderBookmarks(this)})
@@ -55,20 +71,29 @@ function onRejected(error) {
   $("bmDiv").appendChild(elm)
 }
 
-async function traverseTree_savedFolders(bookmarkItem) {
-  const options = await browser.storage.local.get(["selectedFolders"]);
-
-  options.selectedFolders.forEach(function(id) {if (bookmarkItem.id == id) {newFolder(bookmarkItem)}});
+function traverseTree_savedFolders(bookmarkItem,selectedFolders,isRoot) {
+  selectedFolders.forEach(function(id) {if (bookmarkItem.id == id) {newFolder(bookmarkItem)}});
   
   if (bookmarkItem.children) {
     for (const child of bookmarkItem.children) {
-      traverseTree_savedFolders(child);
+      traverseTree_savedFolders(child,selectedFolders,false);
     }
   }
-  
+  if (isRoot) {
+    // run when recursion has finished
+    var collection = document.getElementsByClassName("folderIcon");
+    for (var k = 0; k < collection.length; k++) {
+      var imageHeight = 0
+      imageHeight += collection[k].parentElement.clientHeight;
+      imageHeight -= collection[k].parentElement.children[1].clientHeight;
+      imageHeight -= 2*Number.parseFloat(window.getComputedStyle(collection[k].parentNode, null).getPropertyValue('padding'));
+      collection[k].height = imageHeight;
+    }
+    displayFolderBookmarks($("bookmarkFolders").firstChild)
+  }
 }
 
-async function traverseTree_folderContents(bookmarkItem,bmid,isChild) {
+function traverseTree_folderContents(bookmarkItem,bmid,isChild) {
   if (isChild && bookmarkItem.url) {
     newBookmark(bookmarkItem)
   }
@@ -86,7 +111,8 @@ async function traverseTree_folderContents(bookmarkItem,bmid,isChild) {
 }
 
 async function startTraversal_savedFolders(bookmarkItems) {
-  traverseTree_savedFolders(bookmarkItems[0]);
+  const options = await browser.storage.local.get(["selectedFolders"]);
+  traverseTree_savedFolders(bookmarkItems[0],options.selectedFolders,true);
 }
 
 function startTraversal_folderContents(bookmarkItems,bmid) {
@@ -96,6 +122,7 @@ function startTraversal_folderContents(bookmarkItems,bmid) {
 let treePromise = browser.bookmarks.getTree();
 treePromise.then(startTraversal_savedFolders, onRejected);
 document.querySelectorAll(".dividerBox").forEach(watchOverflow);
+
 
 
 // displayFolderBookmarks($("bookmarkFolders").firstChild.dataset.bookmarkItem)

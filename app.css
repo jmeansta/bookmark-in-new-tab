@@ -25,8 +25,11 @@ body {
 	grid-column: 2 / 3;
 	grid-row: 2 / 3;
 }
+#selectedFolder {
+	background-color: gray;
+}
 
-@media screen and (max-height: 620px){
+/*@media screen and (max-height: 620px){
 	#bookmarkFolders > div {
 		width: 120px;
 		aspect-ratio: auto;
@@ -37,24 +40,37 @@ body {
 		aspect-ratio: 1/1;
 		height: 120px;
 	}
-}
+}*/
 
 #bookmarkFolders {
-	border: 1px solid blue;
 	grid-column: 2 / 3;
 	grid-row: 3 / 4;
-	overflow: scroll;
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-	div {
-		margin: 3px;
-		/*max-height: 90px;*/
+	/*div {
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
 		border: 1px dashed black;
+	}*/
+	border: 1px solid blue;
+	display:flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	overflow: scroll;
+	div {
+		margin: 3px;
+		height: 150px;
+		border: 1px solid red;
+		padding: 5px;
+		aspect-ratio: 1/1;
+		align-content: center;
+		img {
+			display: block;
+			margin: auto;
+		}
+		p {
+			margin: 0;
+		}
 	}
 }
 #bookmarkBar {
