@@ -89,14 +89,14 @@ function onRejected(error) {
   $("bmDiv").appendChild(elm)
 }
 
-function traverseTree_savedFolders(bookmarkItem,selectedFolders,isRoot) {
+function traverseTree_savedFolders(bookmarkItem,selectedBmNodes,isRoot) {
   if (bookmarkItem.children) {
-    selectedFolders.forEach(function(id) {if (bookmarkItem.id == id) {newFolder(bookmarkItem)}});
+    selectedBmNodes.forEach(function(id) {if (bookmarkItem.id == id) {newFolder(bookmarkItem)}});
     for (const child of bookmarkItem.children) {
-      traverseTree_savedFolders(child,selectedFolders,false);
+      traverseTree_savedFolders(child,selectedBmNodes,false);
     }
   } else {
-    selectedFolders.forEach(function(id) {if (bookmarkItem.id == id) {newBookmark(bookmarkItem)}});
+    selectedBmNodes.forEach(function(id) {if (bookmarkItem.id == id) {newBookmark(bookmarkItem)}});
   }
   if (isRoot) {
     // run when recursion has finished
@@ -130,8 +130,8 @@ function traverseTree_folderContents(bookmarkItem,bmid,isChild) {
 }
 
 async function startTraversal_savedFolders(bookmarkItems) {
-  const options = await browser.storage.local.get(["selectedFolders"]);
-  traverseTree_savedFolders(bookmarkItems[0],options.selectedFolders,true);
+  const options = await browser.storage.local.get(["selectedBmNodes"]);
+  traverseTree_savedFolders(bookmarkItems[0],options.selectedBmNodes,true);
 }
 
 function startTraversal_nestedBookmarks(bookmarkItems,bmid) {

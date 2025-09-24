@@ -2,25 +2,23 @@ function $(id) {return document.getElementById(id)}
 
 const saveOptions = async e => {
   var options = {};
-  var selectedFolders = [];
-  var selectedBookmarks = [];
+  var selectedBmNodes = [];
 
-  var collection = document.getElementsByClassName("folderCheckbox")
+  var collection = document.getElementsByClassName("bmNodeCheckbox")
   for (var c in collection) {
     if (collection[c].checked) {
-      selectedFolders.push(collection[c].id)
+      selectedBmNodes.push(collection[c].id)
     }
   }
 
-  options.selectedFolders = selectedFolders;
-  options.selectedBookmarks = selectedBookmarks
+  options.selectedBmNodes = selectedBmNodes;
   await browser.storage.local.set( options );
 };
 
 
 const restoreOptions = async _ => {
   const options = await browser.storage.local.get();
-  options.selectedFolders.forEach((id) => $(id).checked = true);
+  options.selectedBmNodes.forEach((id) => $(id).checked = true);
 };
 
 function newElement(bookmarkItem,indent) {
@@ -37,16 +35,14 @@ function newElement(bookmarkItem,indent) {
   label.htmlFor = bookmarkItem.id;
   rowItem.appendChild(label)
 
-  input.classList.add("folderCheckbox");
+  input.classList.add("bmNodeCheckbox");
   // rowItem.title = indent.toString()+" - "+bookmarkItem.id;
   rowItem.style = "margin: 0px; margin-left: " + indent*40 + "px;"
   rowItem.classList.add("treeItem")
   if (bookmarkItem.url) {
-    input.classList.add("bookmarkCheckbox");
     rowItem.classList.add("bookmark")
     rowItem.title = bookmarkItem.url;
   } else {
-    // input.classList.add("folderCheckbox");
     rowItem.classList.add("folder")
   }
   // rowItem.title = rowItem.classList
