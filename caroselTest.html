@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<style>
+		#carosel {
+			border: 1px solid blue;
+			display:flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			overflow: scroll;
+			div {
+				margin: 3px;
+				height: 150px;
+				border: 1px solid red;
+				padding: 5px;
+				aspect-ratio: 1/1;
+				align-content: center;
+				img {
+					display: block;
+					margin: auto;
+				}
+				p {
+					margin: 0;
+				}
+			}
+		}
+		.is-overflowing {
+			justify-content: left !important;
+		}
+	</style>
+</head>
+<body>
+	<div id="carosel">
+		<div>
+			<img src="https://freesvg.org/img/Placeholder.png">
+			<p>Label 1</p>
+		</div>
+		<div>
+			<img src="https://freesvg.org/img/Placeholder.png">
+			<p>Label 2</p>
+		</div>
+		<div>
+			<img src="https://freesvg.org/img/Placeholder.png">
+			<p>Label 3</p>
+		</div>
+		<div>
+			<img src="https://freesvg.org/img/Placeholder.png">
+			<p>Label 4</p>
+		</div>
+	</div>
+</body>
+<script>
+
+	function watchOverflow(el) {
+		function update() {
+			const overflowing = el.scrollWidth > el.clientWidth;// || el.scrollHeight > el.clientHeight;
+			el.classList.toggle("is-overflowing", overflowing);
+		}
+
+		// Run once initially
+		update();
+
+		// Watch for size changes
+		const resizeObserver = new ResizeObserver(update);
+		resizeObserver.observe(el);
+	}
+
+	// console.log(document.getElementById('carosel'))
+	watchOverflow(document.getElementById('carosel'))
+	// document.querySelectorAll(".dividerBox").forEach(watchOverflow);
+
+	// var theight = document.getElementsByTagName("img")[0].parentNode.children[1].clientHeight
+	// var dheight = document.getElementsByTagName("img")[0].parentNode.clientHeight
+	// document.getElementsByTagName("img")[0].height = dheight-theight;
+
+	var collection = document.getElementsByTagName("img");
+	for (var k in collection) {
+		// console.log(collection[k].parentElement.children[1].innerHTML)
+		var imageHeight = 0
+		imageHeight += collection[k].parentElement.clientHeight;
+		imageHeight -= collection[k].parentElement.children[1].clientHeight;
+		imageHeight -= 2*Number.parseFloat(window.getComputedStyle(collection[k].parentNode, null).getPropertyValue('padding'));
+		collection[k].height = imageHeight;
+	}
+</script>
+</html>

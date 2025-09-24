@@ -1,3 +1,13 @@
+:root {
+	--sb-height: 20%; /*for searchBar*/
+	--bf-height: 20%; /*for bookmarkFolders*/
+	--bb-height: auto; /*for bookmarkBar*/
+
+	/*--bm-folder-div-dimension: calc(var(--bf-height) - 4px);*/
+	--bm-folder-div-dimension: 620px;
+	--foo: var(--bm-folder-div-dimension);
+}
+
 body {
 	display: grid;
 	grid-template-columns: 10% auto 10%;
@@ -7,16 +17,45 @@ body {
 .dividerBox {
 	padding: 3px;
 }
+.is-overflowing {
+	justify-content: left !important;
+}
 #searchBar {
 	border: 1px solid red;
 	grid-column: 2 / 3;
 	grid-row: 2 / 3;
 }
+
+@media screen and (max-height: 620px){
+	#bookmarkFolders > div {
+		width: 120px;
+		aspect-ratio: auto;
+	}
+}
+@media screen and (min-height: 620px){
+	#bookmarkFolders > div {
+		aspect-ratio: 1/1;
+		height: 120px;
+	}
+}
+
 #bookmarkFolders {
 	border: 1px solid blue;
 	grid-column: 2 / 3;
 	grid-row: 3 / 4;
 	overflow: scroll;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	div {
+		margin: 3px;
+		/*max-height: 90px;*/
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		border: 1px dashed black;
+	}
 }
 #bookmarkBar {
 	border: 1px solid green;
