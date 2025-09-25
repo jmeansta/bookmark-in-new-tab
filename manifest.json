@@ -38,8 +38,6 @@
     "newtab": "app.html"
   },
   "background": {
-    "scripts": [
-      "background.js"
-    ]
+      "scripts": ["background.js"]
   }
 }

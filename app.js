@@ -14,6 +14,35 @@ function watchOverflow(el) {
   resizeObserver.observe(el);
 }
 
+function displayOptionsPrompt(argument) {
+  var div = document.createElement("div")
+  var label = document.createElement("p")
+  var img = document.createElement("img")
+
+  img.src = "icons/settings.svg"
+  img.classList.add("iconNeedsScaling")
+  div.appendChild(img)
+
+  label.innerHTML = "Add bookmarks";
+  div.appendChild(label)
+
+  // div.dataset.bookmarkItem = bookmarkItem.id
+  // folder.id = `bmid${bookmarkItem.id}`
+  div.addEventListener('click', function(){openOptions()})
+  div.id = "selectedFolder"
+  $("savedFolders").appendChild(div)
+  // body...
+  function openOptions() {
+    function onOpened() {console.log(`Options page opened`);}
+    function onError(error) {console.log(`Error: ${error}`);}
+
+    let opening = browser.runtime.openOptionsPage();
+    opening.then(onOpened, onError);
+  }
+}
+
+
+
 function displayFolderBookmarks(bmFolderElm) {
   if ($("selectedFolder")==null) {
     bmFolderElm.id = "selectedFolder"
@@ -132,7 +161,11 @@ function traverseTree_folderContents(bookmarkItem,bmid,isChild) {
 
 async function startTraversal_savedFolders(bookmarkItems) {
   const options = await browser.storage.local.get(["selectedBmNodes"]);
-  traverseTree_savedFolders(bookmarkItems[0],options.selectedBmNodes,true);
+  if (options.selectedBmNodes.length == 0) {
+    displayOptionsPrompt()
+  } else {
+    traverseTree_savedFolders(bookmarkItems[0],options.selectedBmNodes,true);
+  }
 }
 
 function startTraversal_nestedBookmarks(bookmarkItems,bmid) {
