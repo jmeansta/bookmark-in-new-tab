@@ -1,6 +1,12 @@
 /*div {
 	border: 1px solid red;
 }*/
+img {
+	filter: grayscale(100%);
+}
+.checkedChild > img {
+	filter: grayscale(0%);
+}
 .treeItem {
 	white-space: nowrap;
 	overflow: hidden;

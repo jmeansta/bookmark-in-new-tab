@@ -16,8 +16,21 @@ const saveOptions = async e => {
 };
 
 const restoreOptions = async _ => {
+  function highlight(famIdentifier) {
+    if (/bmid_[\w-]{12}/g.test(famIdentifier)) {
+      // alert(famIdentifier.replace("bmid","parent"))
+      $(famIdentifier.replace("bmid","parent")).classList.add("checkedChild")
+    }
+  }
+
+  function restoreCheckmarks(id) {
+    $(id).checked = true
+    // alert($(id).parentElement.classList)
+    $(id).parentElement.classList.forEach((famIdentifier) => highlight(famIdentifier))
+  }
+
   const options = await browser.storage.local.get();
-  options.selectedBmNodes.forEach((id) => $(id).checked = true);
+  options.selectedBmNodes.forEach((id) => restoreCheckmarks(id));
 };
 
 function toggleVisibility(button) {
@@ -84,7 +97,7 @@ function newElement(bookmarkItem,indent,classList,bmid) {
 }
 
 function traverseTree(bookmarkItem, indent, printingChildren, classList) {
-  var bmid = `childOf_${bookmarkItem.id}`
+  var bmid = `bmid_${bookmarkItem.id}`
 
   if (printingChildren) {
     newElement(bookmarkItem,indent,classList,bmid)

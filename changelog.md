@@ -1,6 +1,6 @@
-# 1.1.2
+# 1.2
 - added settings button to homepage
-- added "clear all" option with confirmation prompt to options page
+- added indicators in options page for when collapsed menu items are checked
 
 # 1.1.1
 - added prompt to pick bookmarks to the homepage when the user has not selected any bookmarks 
