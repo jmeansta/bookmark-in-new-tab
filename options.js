@@ -30,7 +30,7 @@ function toggleVisibility(button) {
   }
 }
 
-function newElement(bookmarkItem,indent,classList) {
+function newElement(bookmarkItem,indent,classList,bmid) {
   
   var div = document.createElement("div");
   var input = document.createElement("input");
@@ -55,12 +55,13 @@ function newElement(bookmarkItem,indent,classList) {
     div.title = bookmarkItem.url;
   } else {
     div.classList.add("folder")
+    div.id = `parent_${bookmarkItem.id}`
     //button
     // button.innerHTML = "  toggle  "
     button.src = "icons/arrow-left.svg";
     button.dataset.collapsed = true;
     button.title = button.dataset.collapsed
-    button.dataset.bmid = `bmid${bookmarkItem.id}`;
+    button.dataset.bmid = bmid;
     button.onclick = function() {toggleVisibility(this)}
     div.appendChild(button)
   }
@@ -75,21 +76,23 @@ function newElement(bookmarkItem,indent,classList) {
   }
 
   // classes (incl. those for collapsability)
-  div.title = div.classList
   div.classList.add("treeItem")
   classList.forEach((c) => div.classList.add(c))
+
+  div.title = `id: ${div.id}; classList: ${div.classList}`
   $("bmForm").appendChild(div)
 }
 
-function traverseTree(bookmarkItem, indent, printingChildren,classList) {
+function traverseTree(bookmarkItem, indent, printingChildren, classList) {
+  var bmid = `childOf_${bookmarkItem.id}`
+
   if (printingChildren) {
-    newElement(bookmarkItem,indent,classList)
+    newElement(bookmarkItem,indent,classList,bmid)
   }
 
   if (bookmarkItem.children) {
     if (bookmarkItem.id != "root________") {
       indent++;
-      var bmid = `bmid${bookmarkItem.id}`
 
       classList.push(bmid)
 
