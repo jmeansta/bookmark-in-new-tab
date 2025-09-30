@@ -1,3 +1,6 @@
+# 1.2.1
+- added button to clear all saved bookmarks on options page
+
 # 1.2
 - added settings button to homepage
 - added indicators in options page for when collapsed menu items are checked

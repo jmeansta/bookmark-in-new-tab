@@ -15,6 +15,16 @@ const saveOptions = async e => {
   await browser.storage.local.set( options );
 };
 
+async function clearOptions(event) {
+  event.preventDefault();
+  if (window.confirm("Are you sure you want to clear all saved bookmarks?")) {
+    var options = {};
+    options.selectedBmNodes = [];
+    await browser.storage.local.set( options );
+    location.reload()
+  }
+}
+
 const restoreOptions = async _ => {
   function highlight(famIdentifier) {
     if (/bmid_[\w-]{12}/g.test(famIdentifier)) {
@@ -147,4 +157,5 @@ let treePromise = browser.bookmarks.getTree();
 treePromise.then(startTraversal, onRejected);
 
 // document.addEventListener( 'DOMContentLoaded', restoreOptions );
-$("bmForm").addEventListener( 'submit', saveOptions );
+$("bmForm").addEventListener('submit',saveOptions);
+$("clearButton").addEventListener('click',clearOptions);
