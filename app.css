@@ -18,6 +18,10 @@ body {
 	height: 100vh;
 	grid-row-gap: 3%;
 }
+a {
+	display: block;
+}
+
 .dividerBox {
 	padding: 6px;
 	border-radius: 15px;
@@ -26,6 +30,9 @@ body {
 	justify-content: left !important;
 }
 
+#settings {
+	grid-column: 3 / 4;
+}
 #selectedFolder {
 	background-color: #fff !important;
 	color: #000 !important;
@@ -33,7 +40,6 @@ body {
 		filter: invert(0) !important;
 	}
 }
-
 #savedBookmarks {
 	border: solid red;
 	grid-column: 2 / 3;
@@ -63,7 +69,6 @@ body {
 		}
 	}
 }
-
 #savedFolders {
 	grid-column: 2 / 3;
 	grid-row: 3 / 4;
@@ -114,7 +119,4 @@ body {
 		padding-bottom: 2px;
 		padding-top: 2px;
 	}
-}
-a {
-	display: block;
 }

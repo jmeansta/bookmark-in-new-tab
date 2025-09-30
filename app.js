@@ -14,6 +14,14 @@ function watchOverflow(el) {
   resizeObserver.observe(el);
 }
 
+function openOptions() {
+  function onOpened() {console.log(`Options page opened`);}
+  function onError(error) {console.log(`Error: ${error}`);}
+
+  let opening = browser.runtime.openOptionsPage();
+  opening.then(onOpened, onError);
+}
+
 function displayOptionsPrompt(argument) {
   var div = document.createElement("div")
   var label = document.createElement("p")
@@ -31,14 +39,6 @@ function displayOptionsPrompt(argument) {
   div.addEventListener('click', function(){openOptions()})
   div.id = "selectedFolder"
   $("savedFolders").appendChild(div)
-  // body...
-  function openOptions() {
-    function onOpened() {console.log(`Options page opened`);}
-    function onError(error) {console.log(`Error: ${error}`);}
-
-    let opening = browser.runtime.openOptionsPage();
-    opening.then(onOpened, onError);
-  }
 }
 
 
@@ -176,7 +176,7 @@ let treePromise = browser.bookmarks.getTree();
 treePromise.then(startTraversal_savedFolders, onRejected);
 
 document.querySelectorAll(".dividerBox").forEach(watchOverflow);
-
+$("settings").addEventListener('click',openOptions)
 
 
 // displayFolderBookmarks($("bookmarkFolders").firstChild.dataset.bookmarkItem)

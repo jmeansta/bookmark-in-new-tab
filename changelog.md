@@ -1,3 +1,7 @@
+# 1.1.2
+- added settings button to homepage
+- added "clear all" option with confirmation prompt to options page
+
 # 1.1.1
 - added prompt to pick bookmarks to the homepage when the user has not selected any bookmarks 
 
